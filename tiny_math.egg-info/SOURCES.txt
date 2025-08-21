@@ -1,0 +1,11 @@
+LICENSE
+README.md
+pyproject.toml
+tests/test_check_for_square_matrix.py
+tiny_math/__init__.py
+tiny_math/linear_algebra.py
+tiny_math.egg-info/PKG-INFO
+tiny_math.egg-info/SOURCES.txt
+tiny_math.egg-info/dependency_links.txt
+tiny_math.egg-info/requires.txt
+tiny_math.egg-info/top_level.txt
