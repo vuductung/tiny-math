@@ -140,3 +140,26 @@ def transpose(matrix):
         for j in range(cols):
             matrix_transposed[j, i] = matrix[i, j]
     return matrix_transposed
+
+def check_for_symmetry(matrix):
+    """
+    Checks if the input matrix is symmetric.
+
+    Parameters:
+        matrix (np.ndarray): Input 2D matrix.
+
+    Returns:
+        bool: True if the matrix is symmetric, False otherwise.
+
+    Raises:
+        AttributeError: If input does not have 'shape' attribute.
+        IndexError: If input is not 2-dimensional.
+    """
+    if not hasattr(matrix, "shape"):
+        raise AttributeError("Input must have a 'shape' attribute (e.g., a numpy array).")
+    if len(matrix.shape) != 2:
+        raise IndexError("Input must be a 2-dimensional array.")
+    rows, cols = matrix.shape
+    if rows != cols:
+        return False
+    return np.array_equal(matrix, transpose(matrix))

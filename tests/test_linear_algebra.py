@@ -6,7 +6,8 @@ from tiny_math.linear_algebra import (
     det,
     check_for_invertibility,
     inv,
-    transpose
+    transpose,
+    check_for_symmetry
 )
 
 
@@ -280,6 +281,89 @@ class TestTranspose(unittest.TestCase):
         transposed = transpose(matrix)
         original = transpose(transposed)
         np.testing.assert_array_equal(original, matrix)
+
+
+class TestCheckForSymmetry(unittest.TestCase):
+    def test_returns_true_for_symmetric_2x2_matrix(self):
+        matrix = np.array([[1, 2], [2, 3]])
+        self.assertTrue(check_for_symmetry(matrix))
+
+    def test_returns_true_for_symmetric_3x3_matrix(self):
+        matrix = np.array([[1, 2, 3], [2, 4, 5], [3, 5, 6]])
+        self.assertTrue(check_for_symmetry(matrix))
+
+    def test_returns_true_for_identity_matrix(self):
+        matrix = np.array([[1, 0], [0, 1]])
+        self.assertTrue(check_for_symmetry(matrix))
+
+    def test_returns_true_for_zero_matrix(self):
+        matrix = np.array([[0, 0], [0, 0]])
+        self.assertTrue(check_for_symmetry(matrix))
+
+    def test_returns_true_for_diagonal_matrix(self):
+        matrix = np.array([[1, 0, 0], [0, 2, 0], [0, 0, 3]])
+        self.assertTrue(check_for_symmetry(matrix))
+
+    def test_returns_false_for_non_symmetric_2x2_matrix(self):
+        matrix = np.array([[1, 2], [3, 4]])
+        self.assertFalse(check_for_symmetry(matrix))
+
+    def test_returns_false_for_non_symmetric_3x3_matrix(self):
+        matrix = np.array([[1, 2, 3], [4, 5, 6], [7, 8, 9]])
+        self.assertFalse(check_for_symmetry(matrix))
+
+    def test_returns_false_for_rectangular_matrix(self):
+        matrix = np.array([[1, 2, 3], [4, 5, 6]])
+        self.assertFalse(check_for_symmetry(matrix))
+
+    def test_returns_false_for_1x3_matrix(self):
+        matrix = np.array([[1, 2, 3]])
+        self.assertFalse(check_for_symmetry(matrix))
+
+    def test_returns_false_for_3x1_matrix(self):
+        matrix = np.array([[1], [2], [3]])
+        self.assertFalse(check_for_symmetry(matrix))
+
+    def test_returns_false_for_empty_matrix(self):
+        matrix = np.empty((0, 0))
+        self.assertTrue(check_for_symmetry(matrix))  # Empty matrices are symmetric
+
+    def test_returns_false_for_1x1_matrix(self):
+        matrix = np.array([[5]])
+        self.assertTrue(check_for_symmetry(matrix))  # 1x1 matrices are always symmetric
+
+    def test_raises_indexerror_for_one_dimensional_input(self):
+        vector = np.array([1, 2, 3])
+        with self.assertRaises(IndexError):
+            check_for_symmetry(vector)
+
+    def test_raises_indexerror_for_three_dimensional_input(self):
+        tensor = np.array([[[1, 2], [3, 4]], [[5, 6], [7, 8]]])
+        with self.assertRaises(IndexError):
+            check_for_symmetry(tensor)
+
+    def test_raises_attributeerror_for_non_array_like_without_shape(self):
+        not_array_like = [[1, 2], [3, 4]]
+        with self.assertRaises(AttributeError):
+            check_for_symmetry(not_array_like)
+
+    def test_raises_attributeerror_for_none_input(self):
+        with self.assertRaises(AttributeError):
+            check_for_symmetry(None)
+
+    def test_raises_attributeerror_for_string_input(self):
+        with self.assertRaises(AttributeError):
+            check_for_symmetry("matrix")
+
+    def test_symmetric_matrix_equals_its_transpose(self):
+        matrix = np.array([[1, 2], [2, 3]])
+        self.assertTrue(np.array_equal(matrix, transpose(matrix)))
+        self.assertTrue(check_for_symmetry(matrix))
+
+    def test_asymmetric_matrix_not_equals_its_transpose(self):
+        matrix = np.array([[1, 2], [3, 4]])
+        self.assertFalse(np.array_equal(matrix, transpose(matrix)))
+        self.assertFalse(check_for_symmetry(matrix))
 
 
 if __name__ == "__main__":
