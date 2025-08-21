@@ -4,7 +4,8 @@ from tiny_math.linear_algebra import (
     check_for_square_matrix,
     check_for_2x2_matrix,
     det,
-    check_for_invertibility
+    check_for_invertibility,
+    inv
 )
 
 
@@ -115,8 +116,81 @@ class TestCheckForInvertibility(unittest.TestCase):
         with self.assertRaises(IndexError):
             check_for_invertibility(vector)
 
-if __name__ == "__main__":
-    unittest.main()
+
+class TestInv(unittest.TestCase):
+    def test_returns_correct_inverse_for_2x2_matrix(self):
+        matrix = np.array([[1, 2], [3, 4]])
+        expected_inverse = np.array([[-2.0, 1.0], [1.5, -0.5]])
+        result = inv(matrix)
+        np.testing.assert_array_almost_equal(result, expected_inverse)
+
+    def test_returns_correct_inverse_for_identity_matrix(self):
+        matrix = np.array([[1, 0], [0, 1]])
+        expected_inverse = np.array([[1, 0], [0, 1]])
+        result = inv(matrix)
+        np.testing.assert_array_almost_equal(result, expected_inverse)
+
+    def test_returns_correct_inverse_for_simple_matrix(self):
+        matrix = np.array([[2, 0], [0, 3]])
+        expected_inverse = np.array([[0.5, 0], [0, 1/3]])
+        result = inv(matrix)
+        np.testing.assert_array_almost_equal(result, expected_inverse)
+
+    def test_raises_valueerror_for_singular_matrix(self):
+        matrix = np.array([[1, 2], [2, 4]])  # det = 1*4 - 2*2 = 0
+        with self.assertRaises(ValueError):
+            inv(matrix)
+
+    def test_raises_valueerror_for_zero_matrix(self):
+        matrix = np.array([[0, 0], [0, 0]])  # det = 0
+        with self.assertRaises(ValueError):
+            inv(matrix)
+
+    def test_returns_none_for_non_2x2_matrix(self):
+        matrix = np.array([[1, 2, 3], [4, 5, 6], [7, 8, 9]])
+        self.assertIsNone(inv(matrix))
+
+    def test_returns_none_for_rectangular_matrix(self):
+        matrix = np.array([[1, 2, 3], [4, 5, 6]])
+        self.assertIsNone(inv(matrix))
+
+    def test_returns_none_for_1x1_matrix(self):
+        matrix = np.array([[5]])
+        self.assertIsNone(inv(matrix))
+
+    def test_returns_none_for_empty_matrix(self):
+        matrix = np.empty((0, 0))
+        self.assertIsNone(inv(matrix))
+
+    def test_preserves_data_type(self):
+        matrix = np.array([[1, 2], [3, 4]], dtype=np.float32)
+        result = inv(matrix)
+        self.assertEqual(result.dtype, np.float32)
+
+    def test_raises_indexerror_for_one_dimensional_input(self):
+        vector = np.array([1, 2, 3])
+        with self.assertRaises(IndexError):
+            inv(vector)
+
+    def test_raises_attributeerror_for_non_array_like_without_shape(self):
+        not_array_like = [[1, 2], [3, 4]]
+        with self.assertRaises(AttributeError):
+            inv(not_array_like)
+
+    def test_inverse_multiplication_identity(self):
+        matrix = np.array([[1, 2], [3, 4]])
+        inverse = inv(matrix)
+        identity = np.eye(2)
+        result = np.dot(matrix, inverse)
+        np.testing.assert_array_almost_equal(result, identity)
+
+    def test_inverse_multiplication_commutative(self):
+        matrix = np.array([[1, 2], [3, 4]])
+        inverse = inv(matrix)
+        identity = np.eye(2)
+        result = np.dot(inverse, matrix)
+        np.testing.assert_array_almost_equal(result, identity)
+
 
 if __name__ == "__main__":
     unittest.main()

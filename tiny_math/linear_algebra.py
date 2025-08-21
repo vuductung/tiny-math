@@ -85,3 +85,32 @@ def check_for_invertibility(matrix):
     if not check_for_2x2_matrix(matrix):
         return None
     return det(matrix) != 0
+
+def inv(matrix):
+    """
+    Computes the inverse of a 2x2 matrix.
+
+    Parameters:
+        matrix (np.ndarray): Input 2x2 matrix.
+
+    Returns:
+        np.ndarray: Inverse of the input matrix if invertible.
+        None: If input is not a 2x2 matrix or not invertible.
+
+    Raises:
+        IndexError: If input is not 2-dimensional.
+        AttributeError: If input does not have a 'shape' attribute.
+        ValueError: If the matrix is singular (not invertible).
+    """
+    if not check_for_2x2_matrix(matrix):
+        return None
+
+    determinant = det(matrix)
+    if determinant == 0:
+        raise ValueError("Matrix is singular and not invertible.")
+
+    # For a 2x2 matrix [[a, b], [c, d]], the inverse is (1/det) * [[d, -b], [-c, a]]
+    a, b = matrix[0, 0], matrix[0, 1]
+    c, d = matrix[1, 0], matrix[1, 1]
+    inverse = np.array([[d, -b], [-c, a]], dtype=matrix.dtype)
+    return (1.0 / determinant) * inverse
