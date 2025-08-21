@@ -114,3 +114,29 @@ def inv(matrix):
     c, d = matrix[1, 0], matrix[1, 1]
     inverse = np.array([[d, -b], [-c, a]], dtype=matrix.dtype)
     return (1.0 / determinant) * inverse
+
+def transpose(matrix):
+    """
+    Returns the transpose of the input matrix.
+
+    Parameters:
+        matrix (np.ndarray): Input 2D matrix.
+
+    Returns:
+        np.ndarray: Transposed matrix.
+
+    Raises:
+        AttributeError: If input does not have 'shape' attribute.
+        IndexError: If input is not 2-dimensional.
+    """
+    if not hasattr(matrix, "shape"):
+        raise AttributeError("Input must have a 'shape' attribute (e.g., a numpy array).")
+    if len(matrix.shape) != 2:
+        raise IndexError("Input must be a 2-dimensional array.")
+
+    rows, cols = matrix.shape
+    matrix_transposed = np.empty((cols, rows), dtype=matrix.dtype)
+    for i in range(rows):
+        for j in range(cols):
+            matrix_transposed[j, i] = matrix[i, j]
+    return matrix_transposed

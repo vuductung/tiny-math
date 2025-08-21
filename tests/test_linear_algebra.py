@@ -5,7 +5,8 @@ from tiny_math.linear_algebra import (
     check_for_2x2_matrix,
     det,
     check_for_invertibility,
-    inv
+    inv,
+    transpose
 )
 
 
@@ -190,6 +191,95 @@ class TestInv(unittest.TestCase):
         identity = np.eye(2)
         result = np.dot(inverse, matrix)
         np.testing.assert_array_almost_equal(result, identity)
+
+
+class TestTranspose(unittest.TestCase):
+    def test_returns_correct_transpose_for_2x2_matrix(self):
+        matrix = np.array([[1, 2], [3, 4]])
+        expected_transpose = np.array([[1, 3], [2, 4]])
+        result = transpose(matrix)
+        np.testing.assert_array_equal(result, expected_transpose)
+
+    def test_returns_correct_transpose_for_2x3_matrix(self):
+        matrix = np.array([[1, 2, 3], [4, 5, 6]])
+        expected_transpose = np.array([[1, 4], [2, 5], [3, 6]])
+        result = transpose(matrix)
+        np.testing.assert_array_equal(result, expected_transpose)
+
+    def test_returns_correct_transpose_for_3x2_matrix(self):
+        matrix = np.array([[1, 2], [3, 4], [5, 6]])
+        expected_transpose = np.array([[1, 3, 5], [2, 4, 6]])
+        result = transpose(matrix)
+        np.testing.assert_array_equal(result, expected_transpose)
+
+    def test_returns_correct_transpose_for_1x3_matrix(self):
+        matrix = np.array([[1, 2, 3]])
+        expected_transpose = np.array([[1], [2], [3]])
+        result = transpose(matrix)
+        np.testing.assert_array_equal(result, expected_transpose)
+
+    def test_returns_correct_transpose_for_3x1_matrix(self):
+        matrix = np.array([[1], [2], [3]])
+        expected_transpose = np.array([[1, 2, 3]])
+        result = transpose(matrix)
+        np.testing.assert_array_equal(result, expected_transpose)
+
+    def test_returns_correct_transpose_for_identity_matrix(self):
+        matrix = np.array([[1, 0], [0, 1]])
+        expected_transpose = np.array([[1, 0], [0, 1]])
+        result = transpose(matrix)
+        np.testing.assert_array_equal(result, expected_transpose)
+
+    def test_returns_correct_transpose_for_zero_matrix(self):
+        matrix = np.array([[0, 0], [0, 0]])
+        expected_transpose = np.array([[0, 0], [0, 0]])
+        result = transpose(matrix)
+        np.testing.assert_array_equal(result, expected_transpose)
+
+    def test_preserves_data_type(self):
+        matrix = np.array([[1, 2], [3, 4]], dtype=np.float32)
+        result = transpose(matrix)
+        self.assertEqual(result.dtype, np.float32)
+
+    def test_preserves_data_type_for_int_matrix(self):
+        matrix = np.array([[1, 2], [3, 4]], dtype=np.int32)
+        result = transpose(matrix)
+        self.assertEqual(result.dtype, np.int32)
+
+    def test_raises_indexerror_for_one_dimensional_input(self):
+        vector = np.array([1, 2, 3])
+        with self.assertRaises(IndexError):
+            transpose(vector)
+
+    def test_raises_indexerror_for_three_dimensional_input(self):
+        tensor = np.array([[[1, 2], [3, 4]], [[5, 6], [7, 8]]])
+        with self.assertRaises(IndexError):
+            transpose(tensor)
+
+    def test_raises_attributeerror_for_non_array_like_without_shape(self):
+        not_array_like = [[1, 2], [3, 4]]
+        with self.assertRaises(AttributeError):
+            transpose(not_array_like)
+
+    def test_raises_attributeerror_for_none_input(self):
+        with self.assertRaises(AttributeError):
+            transpose(None)
+
+    def test_raises_attributeerror_for_string_input(self):
+        with self.assertRaises(AttributeError):
+            transpose("matrix")
+
+    def test_transpose_twice_returns_original(self):
+        matrix = np.array([[1, 2, 3], [4, 5, 6]])
+        transposed_once = transpose(matrix)
+        transposed_twice = transpose(transposed_once)
+        np.testing.assert_array_equal(transposed_twice, matrix)
+
+    def test_transpose_of_transpose_equals_original(self):
+        matrix = np.array([[1, 2], [3, 4], [5, 6]])
+        transposed = transpose(matrix)
+        original = transpose(transposed)
+        np.testing.assert_array_equal(original, matrix)
 
 
 if __name__ == "__main__":
