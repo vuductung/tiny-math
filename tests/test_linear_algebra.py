@@ -1,0 +1,122 @@
+import unittest
+import numpy as np
+from tiny_math.linear_algebra import (
+    check_for_square_matrix,
+    check_for_2x2_matrix,
+    det,
+    check_for_invertibility
+)
+
+
+class TestCheckForSquareMatrix(unittest.TestCase):
+    def test_returns_true_for_square_matrix(self):
+        matrix = np.array([[1, 2], [3, 4]])
+        self.assertTrue(check_for_square_matrix(matrix))
+
+    def test_returns_false_for_rectangular_matrix(self):
+        matrix = np.array([[1, 2, 3], [4, 5, 6]])
+        self.assertFalse(check_for_square_matrix(matrix))
+
+    def test_returns_true_for_empty_square_matrix(self):
+        matrix = np.empty((0, 0))
+        self.assertTrue(check_for_square_matrix(matrix))
+
+    def test_raises_indexerror_for_one_dimensional_input(self):
+        vector = np.array([1, 2, 3])
+        with self.assertRaises(IndexError):
+            check_for_square_matrix(vector)
+
+    def test_raises_attributeerror_for_non_array_like_without_shape(self):
+        not_array_like = [[1, 2], [3, 4]]
+        with self.assertRaises(AttributeError):
+            check_for_square_matrix(not_array_like)
+
+
+class TestCheckFor2x2Matrix(unittest.TestCase):
+    def test_returns_true_for_2x2_matrix(self):
+        matrix = np.array([[1, 2], [3, 4]])
+        self.assertTrue(check_for_2x2_matrix(matrix))
+
+    def test_returns_false_for_3x3_matrix(self):
+        matrix = np.array([[1, 2, 3], [4, 5, 6], [7, 8, 9]])
+        self.assertFalse(check_for_2x2_matrix(matrix))
+
+    def test_returns_false_for_1x1_matrix(self):
+        matrix = np.array([[5]])
+        self.assertFalse(check_for_2x2_matrix(matrix))
+
+    def test_returns_false_for_rectangular_matrix(self):
+        matrix = np.array([[1, 2, 3], [4, 5, 6]])
+        self.assertFalse(check_for_2x2_matrix(matrix))
+
+    def test_returns_false_for_empty_matrix(self):
+        matrix = np.empty((0, 0))
+        self.assertFalse(check_for_2x2_matrix(matrix))
+
+    def test_raises_indexerror_for_one_dimensional_input(self):
+        vector = np.array([1, 2, 3])
+        with self.assertRaises(IndexError):
+            check_for_2x2_matrix(vector)
+
+
+class TestDet(unittest.TestCase):
+    def test_returns_correct_determinant_for_2x2_matrix(self):
+        matrix = np.array([[1, 2], [3, 4]])
+        expected_det = 1 * 4 - 2 * 3  # 4 - 6 = -2
+        self.assertEqual(det(matrix), expected_det)
+
+    def test_returns_correct_determinant_for_identity_matrix(self):
+        matrix = np.array([[1, 0], [0, 1]])
+        expected_det = 1 * 1 - 0 * 0  # 1 - 0 = 1
+        self.assertEqual(det(matrix), expected_det)
+
+    def test_returns_correct_determinant_for_zero_matrix(self):
+        matrix = np.array([[0, 0], [0, 0]])
+        expected_det = 0 * 0 - 0 * 0  # 0 - 0 = 0
+        self.assertEqual(det(matrix), expected_det)
+
+    def test_returns_none_for_non_2x2_matrix(self):
+        matrix = np.array([[1, 2, 3], [4, 5, 6], [7, 8, 9]])
+        self.assertIsNone(det(matrix))
+
+    def test_returns_none_for_rectangular_matrix(self):
+        matrix = np.array([[1, 2, 3], [4, 5, 6]])
+        self.assertIsNone(det(matrix))
+
+    def test_raises_indexerror_for_one_dimensional_input(self):
+        vector = np.array([1, 2, 3])
+        with self.assertRaises(IndexError):
+            det(vector)
+
+
+class TestCheckForInvertibility(unittest.TestCase):
+    def test_returns_true_for_invertible_2x2_matrix(self):
+        matrix = np.array([[1, 2], [3, 4]])
+        self.assertTrue(check_for_invertibility(matrix))
+
+    def test_returns_false_for_non_invertible_2x2_matrix(self):
+        matrix = np.array([[1, 2], [2, 4]])  # det = 1*4 - 2*2 = 4-4 = 0
+        self.assertFalse(check_for_invertibility(matrix))
+
+    def test_returns_false_for_zero_matrix(self):
+        matrix = np.array([[0, 0], [0, 0]])  # det = 0
+        self.assertFalse(check_for_invertibility(matrix))
+
+    def test_returns_none_for_non_2x2_matrix(self):
+        matrix = np.array([[1, 2, 3], [4, 5, 6], [7, 8, 9]])
+        self.assertIsNone(check_for_invertibility(matrix))
+
+    def test_returns_none_for_rectangular_matrix(self):
+        matrix = np.array([[1, 2, 3], [4, 5, 6]])
+        self.assertIsNone(check_for_invertibility(matrix))
+
+    def test_raises_indexerror_for_one_dimensional_input(self):
+        vector = np.array([1, 2, 3])
+        with self.assertRaises(IndexError):
+            check_for_invertibility(vector)
+
+if __name__ == "__main__":
+    unittest.main()
+
+if __name__ == "__main__":
+    unittest.main()
