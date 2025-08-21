@@ -172,7 +172,7 @@ def check_for_matmul(a, b):
         a (np.ndarray): The first matrix.
         b (np.ndarray): The second matrix.
 
-    Returns:
+    Returns:                                                                                                                                                 
         bool: True if the number of columns in 'a' equals the number of rows in 'b'.
     """
     return a.shape[1] == b.shape[0]
@@ -195,11 +195,10 @@ def matmul(a, b):
     if check_for_matmul(a, b):
         matmul_res = np.empty((a.shape[0], b.shape[1]), dtype=a.dtype)
         
-        for j in range(b.shape[1]):
-            for i in range(a.shape[0]):
+        for i in range(a.shape[0]):
+            for j in range(b.shape[1]):
                 b_j = b[:, j]
                 a_i = a[i]
                 matmul_res[i, j] = np.sum(b_j * a_i)
 
         return matmul_res
-

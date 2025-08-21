@@ -476,7 +476,7 @@ class TestMatmul(unittest.TestCase):
         a = np.array([[1, 2], [3, 4]], dtype=np.float32)
         b = np.array([[5, 6], [7, 8]], dtype=np.float32)
         result = matmul(a, b)
-        self.assertEqual(result.dtype, np.float64)  # np.sum promotes to float64
+        self.assertEqual(result.dtype, np.float32)
 
     def test_raises_attributeerror_for_non_array_like_without_shape(self):
         a = [[1, 2], [3, 4]]
