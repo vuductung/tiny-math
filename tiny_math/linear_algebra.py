@@ -163,3 +163,43 @@ def check_for_symmetry(matrix):
     if rows != cols:
         return False
     return np.array_equal(matrix, transpose(matrix))
+
+def check_for_matmul(a, b):
+    """
+    Checks if two matrices can be multiplied.
+
+    Parameters:
+        a (np.ndarray): The first matrix.
+        b (np.ndarray): The second matrix.
+
+    Returns:
+        bool: True if the number of columns in 'a' equals the number of rows in 'b'.
+    """
+    return a.shape[1] == b.shape[0]
+
+def matmul(a, b):
+    """
+    Multiplies two matrices using the definition of matrix multiplication.
+
+    Parameters:
+        a (np.ndarray): The first matrix.
+        b (np.ndarray): The second matrix.
+
+    Returns:
+        np.ndarray: The result of matrix multiplication.
+
+    Note:
+        This function assumes that the input matrices are 2-dimensional and that
+        their shapes are compatible for matrix multiplication.
+    """
+    if check_for_matmul(a, b):
+        matmul_res = np.empty((a.shape[0], b.shape[1]), dtype=a.dtype)
+        
+        for j in range(b.shape[1]):
+            for i in range(a.shape[0]):
+                b_j = b[:, j]
+                a_i = a[i]
+                matmul_res[i, j] = np.sum(b_j * a_i)
+
+        return matmul_res
+
